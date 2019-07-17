@@ -28,7 +28,7 @@ export abstract class Scraper<M extends MovieParser, S extends SearchParser> {
         let movieId = this.getMovieId(fileName);
         let searchUrl = this.getSearchUrl(movieId);
         let searchDoc = await this.getDocument(searchUrl);
-        let searchResults = this.searchParser.parserResult(searchDoc);
+        let searchResults = this.searchParser.parserResults(searchDoc);
     }
 
     async getDocument(url: String): Promise<any> {
