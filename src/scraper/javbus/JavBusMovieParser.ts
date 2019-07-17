@@ -58,7 +58,7 @@ export class JavBusMovieParser implements MovieParser{
             let name = $item.find('span').text();
             let imgUrl = $item.find('img').attr('src');
             return { name: name, photo: new ImageInfo(imgUrl) }
-        })
+        }).get()
     }
 
     getActors(): Array<People> {

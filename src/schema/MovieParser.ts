@@ -1,3 +1,6 @@
+import {People} from "../model/dataitem/People";
+import {ImageInfo} from "../model/dataitem/ImageInfo";
+
 export interface MovieParser {
     getId(): string
     getTitle(): string

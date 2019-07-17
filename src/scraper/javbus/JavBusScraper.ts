@@ -1,8 +1,8 @@
-import {Scraper} from "../Scraper";
+import {ScraperBase} from "../ScraperBase";
 import {JavBusMovieParser} from "./JavBusMovieParser";
 import {JavBusSearchParser} from "./JavBusSearchParser";
 
-class JavBusScraper extends Scraper<JavBusMovieParser, JavBusSearchParser>{
+export class JavBusScraper extends ScraperBase<JavBusMovieParser, JavBusSearchParser>{
 
     baseUrl = "https://www.javbus.com/";
 
@@ -14,8 +14,11 @@ class JavBusScraper extends Scraper<JavBusMovieParser, JavBusSearchParser>{
         return `${this.baseUrl}search/${movieId}&type=&parent=ce`
     }
 
-    async getDocument(url: String): Promise<any> {
-
+    protected getMovieParser($: any): JavBusMovieParser {
+        return new JavBusMovieParser($);
     }
 
+    protected getSearchParser($: any): JavBusSearchParser {
+        return new JavBusSearchParser();
+    }
 }
