@@ -1,4 +1,4 @@
-import {Scraper} from "../../Scraper";
+import {Scraper} from "../Scraper";
 import {JavBusMovieParser} from "./JavBusMovieParser";
 import {JavBusSearchParser} from "./JavBusSearchParser";
 

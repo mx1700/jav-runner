@@ -1,7 +1,7 @@
-import {SearchResult} from "./model/SearchResult";
+import {SearchResult} from "../model/SearchResult";
 import * as Crawler from "crawler"
-import {SearchParser} from "./schema/SearchParser";
-import {MovieParser} from "./schema/MovieParser";
+import {SearchParser} from "../schema/SearchParser";
+import {MovieParser} from "../schema/MovieParser";
 import * as fs from 'fs';
 
 export abstract class Scraper<M extends MovieParser, S extends SearchParser> {
