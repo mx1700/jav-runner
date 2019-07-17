@@ -5,6 +5,9 @@ import {MovieParser} from "../schema/MovieParser";
 import * as fs from 'fs';
 import {Movie} from "../model/Movie";
 import {Scraper} from "../schema/Scraper";
+const https = require('https');
+
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 export abstract class ScraperBase<M extends MovieParser, S extends SearchParser> implements Scraper{
 
@@ -25,7 +28,20 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     protected initCrawler() {
         this.crawler = new Crawler({
             maxConnections: 10,
+            preRequest: function(options, done) {
+                options.proxy = "https://bwh.tpimg.net:455";
+                options.rejectUnauthorized = false;
+                // options.agent = new https.Agent({
+                //     rejectUnauthorized: false
+                // });
+                done();
+            }
         });
+        // this.crawler.on('schedule',(options) => {
+        //     options.proxy = "https://bwh.tpimg.net:455";
+        //     options.strictSSL = false;
+        //     //options.proxy = "http://127.0.0.1:1080";
+        // });
     }
 
     /**

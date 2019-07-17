@@ -36,5 +36,5 @@ describe('Javbus Scraper Test', () => {
         let s = new JavBusScraper();
         let m = await s.getMovie('HOKS-036');
         console.log(m)
-    }).timeout(1000000)
+    }).timeout(100000)
 });
