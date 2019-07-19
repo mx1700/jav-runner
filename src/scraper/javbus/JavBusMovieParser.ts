@@ -1,6 +1,7 @@
 import {MovieParser} from "../../schema/MovieParser";
 import {People} from "../../model/dataitem/People";
-import {ImageInfo} from "../../model/dataitem/ImageInfo";
+import {Thumb} from "../../model/dataitem/thumb";
+import {Actor} from "../../model/dataitem/Actor";
 
 export class JavBusMovieParser implements MovieParser{
     private readonly $: any;
@@ -50,18 +51,18 @@ export class JavBusMovieParser implements MovieParser{
         });
     }
 
-    private parseActors(): Array<People> {
+    private parseActors(): Array<Actor> {
         let $ = this.$;
         let $actors = $('#star-div .avatar-box');
         return $actors.map((i, item): People => {
             let $item = $(item);
             let name = $item.find('span').text();
             let imgUrl = $item.find('img').attr('src');
-            return { name: name, photo: new ImageInfo(imgUrl) }
+            return new Actor(name, new Thumb(imgUrl))
         }).get()
     }
 
-    getActors(): Array<People> {
+    getActors(): Array<Actor> {
         return this.parseActors();
     }
 
@@ -69,14 +70,9 @@ export class JavBusMovieParser implements MovieParser{
         return this.director && [{ name: this.director }];
     }
 
-    getExtraFanart(): Array<ImageInfo> {
-        //todo
-        return [];
-    }
-
-    getFanart(): Array<ImageInfo> {
+    getFanart(): Array<Thumb> {
         let imgUrl = this.$('.movie .screencap .bigImage img').attr('src');
-        return imgUrl && [new ImageInfo(imgUrl)];
+        return imgUrl && [new Thumb(imgUrl)];
     }
 
     getId(): string {
@@ -84,7 +80,7 @@ export class JavBusMovieParser implements MovieParser{
     }
 
     getOriginalTitle(): string {
-        return "";
+        return this.getTitle();
     }
 
     getPlot(): string {
@@ -95,13 +91,12 @@ export class JavBusMovieParser implements MovieParser{
      * 海报
      * @todo:需要切割主图
      */
-    getPosters(): Array<ImageInfo> {
+    getPosters(): Array<Thumb> {
         //todo
         return [];
     }
 
     getRating(): number {
-        //todo
         return 0;
     }
 
@@ -114,8 +109,7 @@ export class JavBusMovieParser implements MovieParser{
     }
 
     getSortTitle(): string {
-        //todo
-        return "";
+        return this.getId() + " - " + this.getTitle();
     }
 
     getStudio(): string {
@@ -124,7 +118,6 @@ export class JavBusMovieParser implements MovieParser{
     }
 
     getTags(): Array<string> {
-        //todo
         return [];
     }
 
@@ -138,5 +131,21 @@ export class JavBusMovieParser implements MovieParser{
 
     getGenres(): Array<string> {
         return this.$infos.find('.genre a[href*=genre]').map((i, item) => this.$(item).text().trim()).get()
+    }
+
+    getCountry(): string {
+        return "日本";
+    }
+
+    getMPAA(): string {
+        return "XXX";
+    }
+
+    getOutline(): string {
+        return "";
+    }
+
+    getTagline(): string {
+        return "";
     }
 }

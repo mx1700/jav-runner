@@ -1,4 +1,4 @@
-export class ImageInfo {
+export class Thumb {
     url: string;
 
     constructor(url: string) {

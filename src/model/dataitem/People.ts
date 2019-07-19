@@ -1,11 +1,11 @@
-import {ImageInfo} from "./ImageInfo";
+import {Thumb} from "./thumb";
 
 export class People {
     name: string;
-    photo?: ImageInfo;
+    thumb?: Thumb;
 
-    // constructor(name: string, photo: ImageInfo = null) {
-    //     this.name = name;
-    //     this.photo = photo;
-    // }
+    constructor(name: string, thumb: Thumb = null) {
+        this.name = name;
+        this.thumb = thumb;
+    }
 }

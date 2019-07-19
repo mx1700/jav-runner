@@ -78,7 +78,6 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         m.directors = p.getDirectors();
         m.posters = p.getPosters();
         m.fanart = p.getFanart();
-        m.extraFanart = p.getExtraFanart();
         m.rating = p.getRating();
         m.releaseDate = p.getReleaseDate();
         m.year = p.getYear();
@@ -87,6 +86,10 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         m.tags = p.getTags();
         m.genres = p.getGenres();
         m.plot = p.getPlot();
+        m.country = p.getCountry();
+        m.outline = p.getOutline();
+        m.tagline = p.getTagline();
+        m.mpaa = p.getMPAA();
 
         return m;
     }

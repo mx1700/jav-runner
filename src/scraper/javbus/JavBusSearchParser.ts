@@ -10,7 +10,7 @@ export class JavBusSearchParser implements SearchParser{
 
     static parserResult(doc: any): SearchResult {
         let url = doc.attr('href');
-        let $photo = doc.find('.photo-frame img');
+        let $photo = doc.find('.thumb-frame img');
         let imgUrl = $photo.attr('src');
         let title = $photo.attr('title');
         return { url: url, label: title, thumbUrl: imgUrl};
