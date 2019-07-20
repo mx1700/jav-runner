@@ -56,9 +56,15 @@ describe('Javbus Scraper Test', () => {
         await s.downloadThumb(thumb);
     }).timeout(10000)
 
-    it('shoud download all thumbs', async() => {
+    it('should download all thumbs', async() => {
         let s = new JavBusScraper();
         let m = await s.getMovie('HOKS-036');
         await s.downloadMovieThumbs(m)
     }).timeout(10000)
+
+    // it('should makePoster', async() => {
+    //     let s = new JavBusScraper();
+    //     let t = new Thumb("https://pics.javbus.com/cover/76jz_b.jpg", true)
+    //     await s.cropPosterThumb('HOKS-036',t, "test1.jpg")
+    // })
 });

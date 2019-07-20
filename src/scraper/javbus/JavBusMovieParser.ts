@@ -83,16 +83,19 @@ export class JavBusMovieParser implements MovieParser{
         return this.getTitle();
     }
 
+    /**
+     * 简介
+     */
     getPlot(): string {
         return "";
     }
 
     /**
      * 海报
-     * @todo:需要切割主图
      */
     getPosters(): Array<Thumb> {
-        return this.getFanart();
+        let fanart = this.getFanart();
+        return fanart ? [new Thumb(fanart[0].url, true)] : [];
     }
 
     getRating(): number {

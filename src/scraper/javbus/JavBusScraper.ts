@@ -6,11 +6,11 @@ export class JavBusScraper extends ScraperBase<JavBusMovieParser, JavBusSearchPa
 
     baseUrl = "https://www.javbus.com/";
 
-    getMovieId(fileName: String): String {
-        return "HOKS-036";
-    }
+    // getMovieId(fileName: string): string {
+    //     return "HOKS-036";
+    // }
 
-    getSearchUrl(movieId: String) {
+    getSearchUrl(movieId: string) {
         return `${this.baseUrl}search/${movieId}&type=&parent=ce`
     }
 

@@ -19,9 +19,11 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         this.initCrawler();
     }
 
-    protected abstract getMovieId(fileName: String): String;
+    protected getMovieId(fileName: string): string {
+        return fileName
+    }
 
-    protected abstract getSearchUrl(movieId: String);
+    protected abstract getSearchUrl(movieId: string);
 
     protected abstract getSearchParser($: any): S;
 
@@ -50,7 +52,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
      * 刮削影片
      * @param fileName
      */
-    async getMovie(fileName: String): Promise<Movie> {
+    async getMovie(fileName: string): Promise<Movie> {
         let movieId = this.getMovieId(fileName);
         let searchUrl = this.getSearchUrl(movieId);
         let searchDoc = await this.getDocument(searchUrl);
