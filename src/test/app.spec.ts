@@ -2,6 +2,7 @@ import * as help from './help'
 import {JavBusSearchParser} from "../scraper/javbus/JavBusSearchParser";
 import {JavBusMovieParser} from "../scraper/javbus/JavBusMovieParser";
 import {JavBusScraper} from "../scraper/javbus/JavBusScraper";
+import {Thumb} from "../model/dataitem/thumb";
 var assert = require('assert');
 
 describe('Javbus Scraper Test', () => {
@@ -24,7 +25,7 @@ describe('Javbus Scraper Test', () => {
         assert.strictEqual(parser.getRuntime(), 80, 'runtime');
         assert.strictEqual(parser.getReleaseDate(), '2019-07-13', 'release_date');
         assert.strictEqual(parser.getDirectors()[0].name, 'タク・オガワ', 'director');
-        // assert.strictEqual(parser.getReleaseDate(), '2019-07-13');   //todo:制作商
+        assert.strictEqual(parser.getStudio(), '');
         // assert.strictEqual(parser.getReleaseDate(), '2019-07-13');   //todo:发行商
         assert.strictEqual(parser.getGenres().length, 8, 'genres');
         assert.strictEqual(parser.getActors()[0].name, '早川瑞希');
@@ -47,5 +48,17 @@ describe('Javbus Scraper Test', () => {
         assert.strictEqual(m.actors[0].name, '早川瑞希');
         assert.strictEqual(m.actors[0].thumb.url, 'https://pics.javbus.com/actress/o1s_a.jpg');
         assert.strictEqual(m.fanart[0].url, 'https://pics.javbus.com/cover/76jz_b.jpg');
-    }).timeout(5000)
+    }).timeout(10000);
+
+    it('should download thumb', async() => {
+        let thumb = new Thumb("https://pics.javbus.com/cover/76jz_b.jpg");
+        let s = new JavBusScraper();
+        await s.downloadThumb(thumb);
+    }).timeout(10000)
+
+    it('shoud download all thumbs', async() => {
+        let s = new JavBusScraper();
+        let m = await s.getMovie('HOKS-036');
+        await s.downloadMovieThumbs(m)
+    }).timeout(10000)
 });

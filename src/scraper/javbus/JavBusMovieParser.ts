@@ -92,8 +92,7 @@ export class JavBusMovieParser implements MovieParser{
      * @todo:需要切割主图
      */
     getPosters(): Array<Thumb> {
-        //todo
-        return [];
+        return this.getFanart();
     }
 
     getRating(): number {

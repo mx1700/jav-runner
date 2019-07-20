@@ -5,7 +5,9 @@ import {MovieParser} from "../schema/MovieParser";
 import * as fs from 'fs';
 import {Movie} from "../model/Movie";
 import {Scraper} from "../schema/Scraper";
+import {Thumb} from "../model/dataitem/thumb";
 const https = require('https');
+import * as _ from "lodash";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -59,8 +61,19 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
 
         let result = searchResults[0];
         let movieDoc = await this.getDocument(result.url);
-        let movieParser = this.getMovieParser(movieDoc)
+        let movieParser = this.getMovieParser(movieDoc);
         return this.parserToMovie(movieParser)
+    }
+
+    async downloadMovieThumbs(movie: Movie): Promise<any> {
+        let thumbs: Thumb[] = [];
+        thumbs.push(...movie.posters);
+        thumbs.push(...movie.fanart);
+        thumbs.push(...movie.actors.map((it) => it.thumb));
+
+        thumbs = _.uniqBy(thumbs, (it) => it.hashcode);
+        console.log(thumbs);
+        return this.downloadThumbs(thumbs);
     }
 
     /**
@@ -111,5 +124,31 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
             };
             this.crawler.queue(task)
         });
+    }
+
+    public async downloadThumb(thumb: Thumb): Promise<any> {
+        let file = 'tmp/images/' + thumb.hashcode + '.jpg';
+        return new Promise<any>((resolve, reject) => {
+            let task = {
+                uri: thumb.url,
+                encoding:null,
+                jquery: false,
+                callback: function(error, res, done) {
+                    if(error) {
+                        reject(error)
+                    } else {
+                        fs.createWriteStream(file).write(res.body);
+                        resolve()
+                    }
+                    done();
+                }
+            };
+            this.crawler.queue(task)
+        });
+    }
+
+    public async downloadThumbs(thumbs: Thumb[]): Promise<any> {
+        let promises = thumbs.map((it) => this.downloadThumb(it));
+        return Promise.all(promises)
     }
 }
