@@ -56,6 +56,9 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         let movieId = this.getMovieId(fileName);
         let searchUrl = this.getSearchUrl(movieId);
         let searchDoc = await this.getDocument(searchUrl);
+        if(!searchDoc) {
+            return null;
+        }
         let searchResults = this.getSearchParser(searchDoc).parserResults(searchDoc);
         if(!searchResults) {
             return null;
@@ -73,7 +76,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         thumbs.push(...movie.fanart);
         thumbs.push(...movie.actors.map((it) => it.thumb));
 
-        thumbs = _.uniqBy(thumbs, (it) => it.hashcode);
+        thumbs = _.uniqBy(thumbs, (it) => it.hashcode).filter((it) => it.url);
         console.log(thumbs);
         return this.downloadThumbs(thumbs);
     }
@@ -119,7 +122,11 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
                     if(error) {
                         reject(error)
                     } else {
-                        resolve(res.$)
+                        if(res.statusCode == 200) {
+                            resolve(res.$)
+                        } else {
+                            resolve()
+                        }
                     }
                     done();
                 }

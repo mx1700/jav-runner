@@ -2,6 +2,7 @@ import {MovieParser} from "../../schema/MovieParser";
 import {People} from "../../model/dataitem/People";
 import {Thumb} from "../../model/dataitem/thumb";
 import {Actor} from "../../model/dataitem/Actor";
+import {str_t2s} from "../../Help";
 
 export class JavBusMovieParser implements MovieParser{
     private readonly $: any;
@@ -12,6 +13,7 @@ export class JavBusMovieParser implements MovieParser{
     private releaseDate: string;
     private runtime: number;
     private director: string;
+    private studio: string
 
 
     constructor($: any) {
@@ -43,6 +45,7 @@ export class JavBusMovieParser implements MovieParser{
                     this.director = val;
                     break;
                 case "製作商:":
+                    this.studio = val;
                     break;
                 case "發行商:":
                     break;
@@ -56,8 +59,12 @@ export class JavBusMovieParser implements MovieParser{
         let $actors = $('#star-div .avatar-box');
         return $actors.map((i, item): People => {
             let $item = $(item);
-            let name = $item.find('span').text();
-            let imgUrl = $item.find('img').attr('src');
+            let $img = $item.find('img');
+            let name = $img.attr('title');
+            let imgUrl = $img.attr('src');
+            if(imgUrl.indexOf('nowprinting') >= 0) {
+                imgUrl = '';
+            }
             return new Actor(name, new Thumb(imgUrl))
         }).get()
     }
@@ -115,8 +122,7 @@ export class JavBusMovieParser implements MovieParser{
     }
 
     getStudio(): string {
-        //todo
-        return "";
+        return this.studio;
     }
 
     getTags(): Array<string> {
@@ -132,7 +138,7 @@ export class JavBusMovieParser implements MovieParser{
     }
 
     getGenres(): Array<string> {
-        return this.$infos.find('.genre a[href*=genre]').map((i, item) => this.$(item).text().trim()).get()
+        return this.$infos.find('.genre a[href*=genre]').map((i, item) => this.$(item).text().trim()).get().map(str_t2s)
     }
 
     getCountry(): string {
