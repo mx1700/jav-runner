@@ -7,7 +7,7 @@ describe('Nfo Test', function() {
     before(async function() {
         this.timeout(10000);
         let s = new JavBusScraper();
-        movie = await s.getMovie('AVOP-381');
+        movie = await s.getMovie('AVOP-453');
         await s.downloadMovieThumbs(movie);
     });
 

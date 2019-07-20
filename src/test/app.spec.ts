@@ -5,7 +5,7 @@ import {JavBusScraper} from "../scraper/javbus/JavBusScraper";
 import {Thumb} from "../model/dataitem/thumb";
 var assert = require('assert');
 
-describe('Javbus Scraper Test', () => {
+describe('Javbus Scraper Test', function() {
     it('should parse search page', async () => {
         let parser = new JavBusSearchParser();
         let $ = await help.getDocumentMockByFile(__dirname + "/res/javbus-search.html");
@@ -14,7 +14,6 @@ describe('Javbus Scraper Test', () => {
         assert.strictEqual(result[0].url, 'https://www.javbus.com/HOKS-036');
         assert.strictEqual(result[0].label, '快楽堕ち 早川瑞希');
         assert.strictEqual(result[0].thumbUrl, 'https://pics.javbus.com/thumb/76jz.jpg');
-
     });
 
     it('should parse movie page', async () => {
@@ -33,7 +32,8 @@ describe('Javbus Scraper Test', () => {
         assert.strictEqual(parser.getFanart()[0].url, 'https://pics.javbus.com/cover/76jz_b.jpg');
     });
 
-    it('should scraper movie', async() => {
+    it('should scraper movie', async function() {
+        this.timeout(10000);
         let s = new JavBusScraper();
         let m = await s.getMovie('HOKS-036');
 
@@ -48,23 +48,19 @@ describe('Javbus Scraper Test', () => {
         assert.strictEqual(m.actors[0].name, '早川瑞希');
         assert.strictEqual(m.actors[0].thumb.url, 'https://pics.javbus.com/actress/o1s_a.jpg');
         assert.strictEqual(m.fanart[0].url, 'https://pics.javbus.com/cover/76jz_b.jpg');
-    }).timeout(10000);
+    });
 
-    it('should download thumb', async() => {
+    it('should download thumb', async function() {
+        this.timeout(10000);
         let thumb = new Thumb("https://pics.javbus.com/cover/76jz_b.jpg");
         let s = new JavBusScraper();
         await s.downloadThumb(thumb);
-    }).timeout(10000)
+    });
 
-    it('should download all thumbs', async() => {
+    it('should download all thumbs', async function() {
+        this.timeout(10000);
         let s = new JavBusScraper();
         let m = await s.getMovie('HOKS-036');
         await s.downloadMovieThumbs(m)
-    }).timeout(10000)
-
-    // it('should makePoster', async() => {
-    //     let s = new JavBusScraper();
-    //     let t = new Thumb("https://pics.javbus.com/cover/76jz_b.jpg", true)
-    //     await s.cropPosterThumb('HOKS-036',t, "test1.jpg")
-    // })
+    });
 });
