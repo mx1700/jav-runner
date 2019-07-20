@@ -67,7 +67,9 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         let result = searchResults[0];
         let movieDoc = await this.getDocument(result.url);
         let movieParser = this.getMovieParser(movieDoc);
-        return this.parserToMovie(movieParser)
+        let movie = this.parserToMovie(movieParser);
+        await this.downloadMovieThumbs(movie);
+        return movie
     }
 
     async downloadMovieThumbs(movie: Movie): Promise<any> {
@@ -77,6 +79,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         thumbs.push(...movie.actors.map((it) => it.thumb));
 
         thumbs = _.uniqBy(thumbs, (it) => it.hashcode).filter((it) => it.url);
+        console.log(`movie: ${movie.id} download file: ${thumbs.length}`);
         return this.downloadThumbs(thumbs);
     }
 
@@ -114,17 +117,23 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
 
 
     protected async getDocument(url: String): Promise<any> {
+        let start = new Date().getTime();
         return new Promise<any>((resolve, reject) => {
             let task = {
                 uri: url,
                 callback: function(error, res, done) {
+                    let end = new Date().getTime();
+                    let time = end - start;
                     if(error) {
+                        console.error(`[REQUEST] ${url}\t${time}ms\tFAIL-${error}`);
                         reject(error)
                     } else {
                         if(res.statusCode == 200) {
+                            console.log(`[REQUEST] ${url}\t${time}ms\tOK`);
                             resolve(res.$)
                         } else {
-                            resolve()
+                            console.error(`[REQUEST] ${url}\t${time}ms\tFAIL-STATUS${res.statusCode}`);
+                            reject("状态码错误: " + res.statusCode)
                         }
                     }
                     done();
@@ -135,6 +144,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     }
 
     public async downloadThumb(thumb: Thumb): Promise<any> {
+        let start = new Date().getTime();
         let file = 'tmp/images/' + thumb.hashcode + '.jpg';
         return new Promise<any>((resolve, reject) => {
             let task = {
@@ -142,11 +152,20 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
                 encoding:null,
                 jquery: false,
                 callback: function(error, res, done) {
+                    let end = new Date().getTime();
+                    let time = end - start;
                     if(error) {
+                        console.error(`[DOWNLOAD] ${thumb.url} ${time}ms  FAIL-${error}`);
                         reject(error)
                     } else {
-                        fs.createWriteStream(file).write(res.body);
-                        resolve()
+                        if(res.statusCode == 200) {
+                            console.log(`[DOWNLOAD] ${thumb.url}\t${time}ms\tOK`);
+                            fs.createWriteStream(file).write(res.body);
+                            resolve()
+                        } else {
+                            console.error(`[DOWNLOAD] ${thumb.url} ${time}ms  FAIL-STATUS${res.statusCode}`);
+                            reject("状态码错误: " + res.statusCode)
+                        }
                     }
                     done();
                 }

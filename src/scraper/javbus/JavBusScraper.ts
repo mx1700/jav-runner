@@ -6,9 +6,15 @@ export class JavBusScraper extends ScraperBase<JavBusMovieParser, JavBusSearchPa
 
     baseUrl = "https://www.javbus.com/";
 
-    // getMovieId(fileName: string): string {
-    //     return "HOKS-036";
-    // }
+    getMovieId(fileName: string): string {
+        //仅支持jav有码
+        let reg = /([a-zA-Z]{3,6})-?(\d{3,6})/g;
+        let match = reg.exec(fileName);
+        if(!match) {
+            return null;
+        }
+        return match[1].toUpperCase() + '-' + match[2].toUpperCase();
+    }
 
     getSearchUrl(movieId: string) {
         return `${this.baseUrl}search/${movieId}&type=&parent=ce`

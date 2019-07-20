@@ -33,7 +33,7 @@ describe('Javbus Scraper Test', function() {
     });
 
     it('should scraper movie', async function() {
-        this.timeout(10000);
+        this.timeout(20000);
         let s = new JavBusScraper();
         let m = await s.getMovie('HOKS-036');
 
