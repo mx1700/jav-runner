@@ -6,7 +6,7 @@ import {NfoBuilder} from "./NfoBuilder";
 
 export class NfoWriter {
     public async writeNfo(movie: Movie, path: string): Promise<any> {
-        let builder = new NfoBuilder();
+        let builder = new NfoBuilder(movie);
         let xml = builder.buildNfo(movie);
         return new Promise<any>((resolve, reject) => {
             fs.writeFile(path, xml, (err) => {
