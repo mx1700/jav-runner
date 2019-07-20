@@ -42,7 +42,6 @@ export class NfoWriter {
     public async cropPosterThumb(id: string, thumb: Thumb, toFile: string): Promise<any> {
         let img = sharp(thumb.tmpPath);
         let data = await img.metadata();
-        console.log(data);
         let width = data.width;
         let height = data.height;
 

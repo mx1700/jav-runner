@@ -77,7 +77,6 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
         thumbs.push(...movie.actors.map((it) => it.thumb));
 
         thumbs = _.uniqBy(thumbs, (it) => it.hashcode).filter((it) => it.url);
-        console.log(thumbs);
         return this.downloadThumbs(thumbs);
     }
 
