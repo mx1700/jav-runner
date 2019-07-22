@@ -1,4 +1,4 @@
-import {Runner} from "./runner";
+import {Runner} from "./Runner";
 
 
 function main(args) {

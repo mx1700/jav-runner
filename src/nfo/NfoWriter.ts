@@ -2,40 +2,31 @@ import {Movie} from "../model/Movie";
 import {Thumb} from "../model/dataitem/thumb";
 import * as sharp from "sharp"
 import * as fs from 'fs';
+import * as path from "path"
 import {NfoBuilder} from "./NfoBuilder";
 
 export class NfoWriter {
-    public async writeNfo(movie: Movie, path: string): Promise<any> {
+    public async writeNfo(movie: Movie, filePath: string): Promise<any> {
         let builder = new NfoBuilder(movie);
         let xml = builder.buildNfo(movie);
-        return new Promise<any>((resolve, reject) => {
-            fs.writeFile(path, xml, (err) => {
-                err ? reject(err) : resolve()
-            });
-        });
+        return fs.promises.writeFile(filePath + '.nfo', xml);
     }
 
-    public async writePoster(movie: Movie, path: string): Promise<any> {
+    public async writePoster(movie: Movie, filePath: string): Promise<any> {
         for (let thumb of movie.posters) {
+            let file = filePath + '-poster' + path.extname(thumb.url);
             if(thumb.isCrop) {
-                return this.cropPosterThumb(movie.id, thumb, path)
+                return this.cropPosterThumb(movie.id, thumb, file)
             } else {
-                return new Promise<any>((resolve ,reject) => {
-                    fs.copyFile(thumb.tmpPath, path, function (err) {
-                        err ? reject(err) : resolve();
-                    })
-                });
+                return fs.promises.copyFile(thumb.tmpPath, file);
             }
         }
     }
 
-    public writeFanart(movie: Movie, path: string) {
+    public writeFanart(movie: Movie, filePath: string) {
         for (let thumb of movie.fanart) {
-            return new Promise<any>((resolve, reject) => {
-                fs.copyFile(thumb.tmpPath, path, function (err) {
-                    err ? reject(err) : resolve();
-                })
-            });
+            let file = filePath + '-fanart' + path.extname(thumb.url);
+            return fs.promises.copyFile(thumb.tmpPath, file);
         }
     }
 
