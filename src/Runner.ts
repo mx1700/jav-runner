@@ -17,6 +17,9 @@ export class Runner {
          * 文件名永远是番号
          * 文件夹名可以自定义,目前先写死
          */
+
+        let scraper = new JavBusScraper();
+        let files = [];
         list.forEach((item, i) => {
             let fileName = dir + '/' + item;
             let info = fs.statSync(fileName);
@@ -27,18 +30,22 @@ export class Runner {
                 return;
             }
 
-            if (isDir) {
-                console.log("dir: " + item)
-            } else {
-                console.log("file: " + item)
-            }
-        })
+            files.push({ file: fileName, info: info })
+        });
+
+        console.log(files);
+
+        let tasks = files.map((it) => this.scraperMovie(it.file, it.info, scraper));
+        Promise.all(tasks).then(() => {
+            console.log("------ [DONE] ------");
+        });
     }
 
-    async scraperMovie(file: string, fileInfo: fs.Stats, scraper: Scraper): Promise<any> {
-        let movie = await scraper.getMovie(file);
+    async scraperMovie(filePath: string, fileInfo: fs.Stats, scraper: Scraper): Promise<any> {
+        let fileName = path.basename(filePath);
+        let movie = await scraper.getMovie(fileName);
         if(movie) {
-            let moviePath = await this.rename(movie, file, fileInfo.isDirectory());
+            let moviePath = await this.rename(movie, filePath, fileInfo.isDirectory());
             let dir = path.dirname(moviePath);
             let name = path.basename(moviePath);
             let writeBase = dir + '/' + name;
