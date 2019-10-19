@@ -45,15 +45,14 @@ export class Runner {
         let fileName = path.basename(filePath);
         let movie = await scraper.getMovie(fileName);
         if(movie) {
-            let moviePath = await this.rename(movie, filePath, fileInfo.isDirectory());
-            let dir = path.dirname(moviePath);
-            let name = path.basename(moviePath);
-            let writeBase = dir + '/' + name;
-            let writer = new NfoWriter();
-            await writer.writeNfo(movie, writeBase + '.nfo');
-            await writer.writePoster(movie, writeBase + '-poster.jpg')
+            let newFilePath = await this.rename(movie, filePath, fileInfo.isDirectory());
+            let newFileInfo = path.parse(newFilePath);
+            let writer = new NfoWriter(movie, newFileInfo.dir, newFileInfo.name);
+            await writer.writeNfo();
+            await writer.writePoster();
+            await writer.writeFanart();
         } else {
-            //todo:抓取失败
+            console.error(`${filePath} 抓取失败`);
         }
     }
 

@@ -6,31 +6,45 @@ import * as path from "path"
 import {NfoBuilder} from "./NfoBuilder";
 
 export class NfoWriter {
-    public async writeNfo(movie: Movie, filePath: string): Promise<any> {
-        let builder = new NfoBuilder(movie);
-        let xml = builder.buildNfo(movie);
-        return fs.promises.writeFile(filePath + '.nfo', xml);
+    private readonly movie: Movie;
+    private readonly dir: string;
+    private readonly basename: string;
+
+    constructor(movie: Movie, dir: string, basename: string) {
+        this.movie = movie;
+        this.dir = dir;
+        this.basename = basename;
     }
 
-    public async writePoster(movie: Movie, filePath: string): Promise<any> {
-        for (let thumb of movie.posters) {
-            let file = filePath + '-poster' + path.extname(thumb.url);
+    get writeBase() {
+        return path.join(this.dir, this.basename);
+    }
+
+    public async writeNfo(): Promise<any> {
+        let builder = new NfoBuilder(this.movie);
+        let xml = builder.buildNfo(this.movie);
+        return fs.promises.writeFile(this.writeBase + '.nfo', xml);
+    }
+
+    public async writePoster(): Promise<any> {
+        for (let thumb of this.movie.posters) {
+            let file = this.writeBase + '-poster' + path.extname(thumb.url);
             if(thumb.isCrop) {
-                return this.cropPosterThumb(movie.id, thumb, file)
+                return NfoWriter.cropPosterThumb(this.movie.id, thumb, file)
             } else {
                 return fs.promises.copyFile(thumb.tmpPath, file);
             }
         }
     }
 
-    public writeFanart(movie: Movie, filePath: string) {
-        for (let thumb of movie.fanart) {
-            let file = filePath + '-fanart' + path.extname(thumb.url);
+    public writeFanart() {
+        for (let thumb of this.movie.fanart) {
+            let file = this.writeBase + '-fanart' + path.extname(thumb.url);
             return fs.promises.copyFile(thumb.tmpPath, file);
         }
     }
 
-    public async cropPosterThumb(id: string, thumb: Thumb, toFile: string): Promise<any> {
+    public static async cropPosterThumb(id: string, thumb: Thumb, toFile: string): Promise<any> {
         let img = sharp(thumb.tmpPath);
         let data = await img.metadata();
         let width = data.width;
