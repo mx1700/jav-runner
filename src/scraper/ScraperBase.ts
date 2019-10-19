@@ -31,7 +31,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
 
     protected initCrawler() {
         this.crawler = new Crawler({
-            maxConnections: 10,
+            maxConnections: 5,
             preRequest: function(options, done) {
                 options.proxy = "https://bwh.tpimg.net:455";
                 options.rejectUnauthorized = false;

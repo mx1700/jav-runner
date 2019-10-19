@@ -33,8 +33,6 @@ export class Runner {
             files.push({ file: fileName, info: info })
         });
 
-        console.log(files);
-
         let tasks = files.map((it) => this.scraperMovie(it.file, it.info, scraper));
         Promise.all(tasks).then(() => {
             console.log("------ [DONE] ------");
@@ -43,16 +41,22 @@ export class Runner {
 
     async scraperMovie(filePath: string, fileInfo: fs.Stats, scraper: Scraper): Promise<any> {
         let fileName = path.basename(filePath);
-        let movie = await scraper.getMovie(fileName);
-        if(movie) {
-            let newFilePath = await this.rename(movie, filePath, fileInfo.isDirectory());
-            let newFileInfo = path.parse(newFilePath);
-            let writer = new NfoWriter(movie, newFileInfo.dir, newFileInfo.name);
-            await writer.writeNfo();
-            await writer.writePoster();
-            await writer.writeFanart();
-        } else {
-            console.error(`${filePath} 抓取失败`);
+        console.log(`[JAV-RUNNER] ${fileName} 开始抓取`);
+        try {
+            let movie = await scraper.getMovie(fileName);
+            if(movie) {
+                let newFilePath = await this.rename(movie, filePath, fileInfo.isDirectory());
+                let newFileInfo = path.parse(newFilePath);
+                let writer = new NfoWriter(movie, newFileInfo.dir, newFileInfo.name);
+                await writer.writeNfo();
+                await writer.writePoster();
+                await writer.writeFanart();
+                console.log(`[JAV-RUNNER] ${fileName} 抓取完成`);
+            } else {
+                console.error(`[JAV-RUNNER] 没有找到 ${fileName} 影片`);
+            }
+        } catch(e) {
+            console.error(`[JAV-RUNNER] 抓取 ${fileName} 失败, 错误信息: ` + e.message)
         }
     }
 
@@ -61,7 +65,7 @@ export class Runner {
             let basePath = path.dirname(filePath);
             let newName = this.getDirRename(movie);
             let newDir = basePath + '/' + newName;
-            console.log(filePath, newDir);
+            // console.log(filePath, newDir);
             await fs.promises.rename(filePath, newDir);
             let files = await fs.promises.readdir(newDir);
             let movieFiles = files.filter(isVideoFile);
