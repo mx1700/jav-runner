@@ -32,19 +32,23 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     protected initCrawler() {
         this.crawler = new Crawler({
             maxConnections: 5,
-            preRequest: function(options, done) {
-                options.proxy = "https://bwh.tpimg.net:455";
-                options.rejectUnauthorized = false;
-                // options.agent = new https.Agent({
-                //     rejectUnauthorized: false
-                // });
-                done();
-            }
+            // preRequest: function(options, done) {
+            //     options.proxy = "https://bwh.tpimg.net:455";
+            //     options.rejectUnauthorized = false;
+            //     // options.agent = new https.Agent({
+            //     //     rejectUnauthorized: false
+            //     // });
+            //     done();
+            // }
         });
         // this.crawler.on('schedule',(options) => {
         //     options.proxy = "https://bwh.tpimg.net:455";
         //     options.strictSSL = false;
         //     //options.proxy = "http://127.0.0.1:1080";
+        // });
+        // this.crawler.on('request', function(options) {
+        //     console.log('request options', options);
+        //     options.startTime = new Date().getTime();
         // });
     }
 
@@ -118,15 +122,22 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
 
 
     protected async getDocument(url: String): Promise<any> {
-        let start = new Date().getTime();
         return new Promise<any>((resolve, reject) => {
+            let start = null;
             let task = {
                 uri: url,
+                preRequest: function(options, done) {
+                    start = new Date().getTime();
+                    options.proxy = "https://bwh.tpimg.net:455";
+                    options.rejectUnauthorized = false;
+                    done();
+                },
                 callback: function(error, res, done) {
                     let end = new Date().getTime();
                     let time = end - start;
+                    // console.log('response options', res.options);
                     if(error) {
-                        console.error(`[REQUEST] ${url}\t${time}ms\tFAIL-${error}`);
+                        console.log(`[REQUEST] ${url}\t${time}ms\tFAIL-${error}`);
                         reject(error)
                     } else {
                         if(res.statusCode == 200) {
@@ -145,13 +156,19 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     }
 
     public async downloadThumb(thumb: Thumb): Promise<any> {
-        let start = new Date().getTime();
         let file = 'tmp/images/' + thumb.hashcode + '.jpg';
         return new Promise<any>((resolve, reject) => {
+            let start = null;
             let task = {
                 uri: thumb.url,
                 encoding:null,
                 jquery: false,
+                preRequest: function(options, done) {
+                    start = new Date().getTime();
+                    options.proxy = "https://bwh.tpimg.net:455";
+                    options.rejectUnauthorized = false;
+                    done();
+                },
                 callback: function(error, res, done) {
                     let end = new Date().getTime();
                     let time = end - start;
@@ -164,7 +181,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
                             fs.createWriteStream(file).write(res.body);
                             resolve()
                         } else {
-                            console.error(`[DOWNLOAD] ${thumb.url} ${time}ms  FAIL-STATUS${res.statusCode}`);
+                            console.log(`[DOWNLOAD] ${thumb.url} ${time}ms  FAIL-STATUS${res.statusCode}`);
                             reject("状态码错误: " + res.statusCode)
                         }
                     }

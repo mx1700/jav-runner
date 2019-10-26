@@ -1,0 +1,9 @@
+{
+  "proxy": "https://bwh.tpimg.net:455",
+  "rename": {
+    "template": "${id} [${actors}] [${genres}] (${year})",
+    "actors_limit": 3,
+    "genres_limit": 6,
+    "title_length_limit": 20
+  }
+}

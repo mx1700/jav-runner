@@ -89,6 +89,9 @@ export class Runner {
     public getDirRename(movie: Movie) {
         let actors = movie.actors.map((it) => it.name).slice(0, 3).join(",");
         let genres = movie.genres.join(',');
-        return `${movie.id} [${actors}] [${genres}] (${movie.year})`
+        let id = movie.id;
+        let title = movie.title;
+        let year = movie.year;
+        return `${id} [${actors}] [${genres}] (${year})`
     }
 }
