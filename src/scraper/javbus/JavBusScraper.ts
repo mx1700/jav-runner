@@ -17,6 +17,7 @@ export class JavBusScraper extends ScraperBase<JavBusMovieParser, JavBusSearchPa
     }
 
     getSearchUrl(movieId: string) {
+        movieId = movieId.replace('-', '');
         return `${this.baseUrl}search/${movieId}&type=&parent=ce`
     }
 
