@@ -161,12 +161,7 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     }
 
     public async downloadThumb(thumb: Thumb): Promise<any> {
-        let tmpPath = path.join(os.tmpdir(), 'jav-runner', 'images');
-        if(!fs.existsSync(tmpPath)) {
-            console.log("[DEBUG] Create tmp dir: " + tmpPath);
-            fs.mkdirSync(tmpPath, { recursive: true });
-        }
-        let file = path.join(tmpPath, thumb.hashcode + '.jpg');
+        let file = path.join(Config.tmpDir, thumb.hashcode + '.jpg');
         return new Promise<any>((resolve, reject) => {
             let start = null;
             let task = {

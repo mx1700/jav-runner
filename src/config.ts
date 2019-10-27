@@ -10,7 +10,8 @@ let exp = {
         actors_limit: 3,
         genres_limit: 8,
         title_length_limit: 30,
-    }
+    },
+    tmpDir: '',
 };
 
 let homeDir = os.homedir();
@@ -21,6 +22,13 @@ if(fs.existsSync(configPath)) {
     exp.proxy = config.proxy;
     exp.rename = config.rename;
 }
+
+let tmpPath = path.join(os.tmpdir(), 'jav-runner', 'images');
+if(!fs.existsSync(tmpPath)) {
+    console.log("[DEBUG] Create tmp dir: " + tmpPath);
+    fs.mkdirSync(tmpPath, { recursive: true });
+}
+exp.tmpDir = tmpPath;
 
 
 function init() {

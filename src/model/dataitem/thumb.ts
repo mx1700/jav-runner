@@ -1,4 +1,6 @@
-const crypto=require('crypto');
+const crypto = require('crypto');
+const path = require('path');
+import Config from '../../config';
 
 export class Thumb {
     readonly url: string;
@@ -14,6 +16,6 @@ export class Thumb {
     }
 
     get tmpPath(): string {
-        return 'tmp/images/' + this.hashcode + '.jpg'
+        return path.join(Config.tmpDir, this.hashcode + '.jpg')
     }
 }
