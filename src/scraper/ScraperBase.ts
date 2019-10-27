@@ -8,6 +8,7 @@ import {Scraper} from "../schema/Scraper";
 import {Thumb} from "../model/dataitem/thumb";
 const https = require('https');
 import * as _ from "lodash";
+import Config from "../config";
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -128,7 +129,9 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
                 uri: url,
                 preRequest: function(options, done) {
                     start = new Date().getTime();
-                    options.proxy = "https://bwh.tpimg.net:455";
+                    if(Config.proxy) {
+                        options.proxy = Config.proxy;
+                    }
                     options.rejectUnauthorized = false;
                     done();
                 },
@@ -165,7 +168,9 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
                 jquery: false,
                 preRequest: function(options, done) {
                     start = new Date().getTime();
-                    options.proxy = "https://bwh.tpimg.net:455";
+                    if(Config.proxy) {
+                        options.proxy = Config.proxy;
+                    }
                     options.rejectUnauthorized = false;
                     done();
                 },

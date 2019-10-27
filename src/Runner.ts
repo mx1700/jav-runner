@@ -5,9 +5,11 @@ import {Scraper} from "./schema/Scraper";
 import {isVideoFile} from "./Help";
 import {Movie} from "./model/Movie";
 import {NfoWriter} from "./nfo/NfoWriter";
+import Config from "./config";
 
 export class Runner {
     run(dir: string) {
+        Config.init();
         let list = fs.readdirSync(dir);
         /*
          * 只遍历一层文件夹
@@ -87,11 +89,11 @@ export class Runner {
     }
 
     public getDirRename(movie: Movie) {
-        let actors = movie.actors.map((it) => it.name).slice(0, 3).join(",");
-        let genres = movie.genres.join(',');
+        let actors = movie.actors.map((it) => it.name).slice(0, Config.rename.actors_limit).join(",");
+        let genres = movie.genres.slice(0, Config.rename.genres_limit).join(',');
         let id = movie.id;
-        let title = movie.title;
+        let title = movie.title.slice(0, Config.rename.title_length_limit);
         let year = movie.year;
-        return `${id} [${actors}] [${genres}] (${year})`
+        return eval('`' + Config.rename.template + '`')
     }
 }
