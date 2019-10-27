@@ -8,12 +8,12 @@ export class JavBusScraper extends ScraperBase<JavBusMovieParser, JavBusSearchPa
 
     getMovieId(fileName: string): string {
         //仅支持jav有码
-        let reg = /([a-zA-Z]{3,6})-?(\d{3,6})/g;
+        let reg = /([a-zA-Z]{2,6})-?(00)?(\d{3,6})/g;
         let match = reg.exec(fileName);
         if(!match) {
             return null;
         }
-        return match[1].toUpperCase() + '-' + match[2].toUpperCase();
+        return match[1].toUpperCase() + '-' + match[3].toUpperCase();
     }
 
     getSearchUrl(movieId: string) {
