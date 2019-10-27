@@ -58,6 +58,7 @@ export class Runner {
                 console.error(`[JAV-RUNNER] 没有找到 ${fileName} 影片`);
             }
         } catch(e) {
+            console.log(e);
             console.error(`[JAV-RUNNER] 抓取 ${fileName} 失败, 错误信息: ` + e.message)
         }
     }
