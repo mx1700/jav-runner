@@ -16,7 +16,7 @@ export class NfoBuilder {
         this.items.push(this.header);
         this.items.push('<movie>');
             
-        this.appendItem(m.title, 'title');
+        this.appendItem(m.title + ` [${m.id}]`, 'title');
         this.appendItem(m.originalTitle, 'originaltitle');
         this.appendItem(m.sortTitle, 'sorttitle');
         this.appendItem(m.year.toString(), 'year');
