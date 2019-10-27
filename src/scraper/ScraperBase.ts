@@ -9,6 +9,8 @@ import {Thumb} from "../model/dataitem/thumb";
 const https = require('https');
 import * as _ from "lodash";
 import Config from "../config";
+const os = require('os');
+const path = require('path');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
@@ -159,7 +161,12 @@ export abstract class ScraperBase<M extends MovieParser, S extends SearchParser>
     }
 
     public async downloadThumb(thumb: Thumb): Promise<any> {
-        let file = 'tmp/images/' + thumb.hashcode + '.jpg';
+        let tmpPath = path.join(os.tmpdir(), 'jav-runner', 'images');
+        if(!fs.existsSync(tmpPath)) {
+            console.log("[DEBUG] Create tmp dir: " + tmpPath);
+            fs.mkdirSync(tmpPath, { recursive: true });
+        }
+        let file = path.join(tmpPath, thumb.hashcode + '.jpg');
         return new Promise<any>((resolve, reject) => {
             let start = null;
             let task = {
