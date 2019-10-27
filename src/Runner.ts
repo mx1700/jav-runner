@@ -8,6 +8,7 @@ import {NfoWriter} from "./nfo/NfoWriter";
 import Config from "./config";
 
 export class Runner {
+
     run(dir: string) {
         Config.init();
         let list = fs.readdirSync(dir);

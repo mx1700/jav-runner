@@ -1,4 +1,6 @@
 let fs = require('fs');
+let os = require('os');
+let path = require('path');
 
 let exp = {
     init: init,
@@ -11,10 +13,15 @@ let exp = {
     }
 };
 
-let str = fs.readFileSync('./config.json');
-let config = JSON.parse(str);
-exp.proxy = config.proxy;
-exp.rename = config.rename;
+let homeDir = os.homedir();
+let configPath = path.join(homeDir, '.config/jav-runner', 'config.json');
+if(fs.existsSync(configPath)) {
+    let str = fs.readFileSync(configPath);
+    let config = JSON.parse(str);
+    exp.proxy = config.proxy;
+    exp.rename = config.rename;
+}
+
 
 function init() {
     return exp;
