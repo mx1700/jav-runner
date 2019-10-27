@@ -2,7 +2,9 @@
   "name": "jav-runner",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "bin": {
+    "jav": "dist/app.js"
+  },
   "scripts": {
     "test": "echo \\\"Error: no src/test specified\\\" && exit 1",
     "build": "tsc"

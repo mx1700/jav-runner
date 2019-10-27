@@ -1,5 +1,6 @@
-import {Runner} from "./Runner";
+#!/usr/bin/env node
 
+import {Runner} from "./Runner";
 
 function main(args) {
     let runner = new Runner();
