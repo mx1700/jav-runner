@@ -11,14 +11,14 @@ describe('Nfo Test', function() {
     });
 
     it('should write .nfo', async function() {
-        await new NfoWriter().writeNfo(movie, "tmp/" + movie.id)
+        await new NfoWriter(movie, "tmp/", movie.id).writeNfo()
     });
 
     it('should write poster', async function() {
-        await new NfoWriter().writePoster(movie, "tmp/" + movie.id)
+        await new NfoWriter(movie, "tmp/", movie.id).writePoster()
     });
 
     it('should write fanart', async function() {
-        await new NfoWriter().writeFanart(movie, "tmp/" + movie.id)
+        await new NfoWriter(movie, "tmp/", movie.id).writeFanart()
     })
 });

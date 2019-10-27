@@ -2,7 +2,9 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2016",
-    "sourceMap": false
+    "sourceMap": false,
+    "outDir": "./dist/",
+    "declaration": false // 是否生成声明文件
   },
   "exclude": [
     "node_modules"
