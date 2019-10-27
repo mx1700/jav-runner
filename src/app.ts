@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import {Runner} from "./Runner";
+require('fs.promises');
 
 function main(args) {
     let runner = new Runner();
