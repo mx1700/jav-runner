@@ -1,6 +1,6 @@
 {
   "name": "jav-runner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "bin": {
     "jav": "dist/app.js"
@@ -21,6 +21,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "commander": "^3.0.2",
     "crawler": "^1.2.1",
     "fs.promises": "^0.1.2",
     "lodash": "^4.17.15",
