@@ -32,7 +32,7 @@ export class NfoWriter {
             if(thumb.isCrop) {
                 return NfoWriter.cropPosterThumb(this.movie.id, thumb, file)
             } else {
-                return fs.promises.copyFile(thumb.tmpPath, file);
+                return this.copyFile(thumb.tmpPath, file);
             }
         }
     }
@@ -40,8 +40,20 @@ export class NfoWriter {
     public async writeFanart(): Promise<any> {
         for (let thumb of this.movie.fanart) {
             let file = this.writeBase + '-fanart' + path.extname(thumb.url);
-            return fs.promises.copyFile(thumb.tmpPath, file);
+            return this.copyFile(thumb.tmpPath, file);
         }
+    }
+
+    private async copyFile(source: string, target: string) {
+        return new Promise<any>((resolve, reject) => {
+            fs.copyFile(source, target, function(err) {
+                if(err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
     }
 
     public static async cropPosterThumb(id: string, thumb: Thumb, toFile: string): Promise<any> {
