@@ -37,7 +37,7 @@ export class NfoWriter {
         }
     }
 
-    public async writeFanart() {
+    public async writeFanart(): Promise<any> {
         for (let thumb of this.movie.fanart) {
             let file = this.writeBase + '-fanart' + path.extname(thumb.url);
             return fs.promises.copyFile(thumb.tmpPath, file);
