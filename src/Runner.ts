@@ -18,13 +18,16 @@ export class Runner {
          * 如果是文件夹就不创建
          * 最后都修改文件夹名&文件名
          * 文件名永远是番号
-         * 文件夹名可以自定义,目前先写死
          */
+        list = list.map((item) => dir + '/' + item);
+        this.runFiles(list);
+    }
 
+    runFiles(list: string[]) {
         let scraper = new JavBusScraper();
         let files = [];
         list.forEach((item, i) => {
-            let fileName = dir + '/' + item;
+            let fileName = item;
             let info = fs.statSync(fileName);
             let isDir = info.isDirectory();
 

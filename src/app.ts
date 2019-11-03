@@ -11,9 +11,15 @@ function main(args) {
         .option('-d, --debug', '输出调试信息');
 
     program.parse(args);
-    console.log(program, program.opts(), program.R, program.args);
-    // let runner = new Runner();
-    // runner.run(args[0])
+    console.log(program.opts(), program.R, program.args);
+
+    let runner = new Runner();
+    if(program.R) {
+        let dir = program.args[0];
+        runner.run(dir)
+    } else {
+        runner.runFiles(program.args);
+    }
 }
 
 main(process.argv);
