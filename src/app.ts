@@ -11,7 +11,6 @@ function main(args) {
         .option('-d, --debug', '输出调试信息');
 
     program.parse(args);
-    console.log(program.opts(), program.R, program.args);
 
     let runner = new Runner();
     if(program.R) {
